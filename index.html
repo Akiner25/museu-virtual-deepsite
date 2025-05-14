@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museu Virtual de Civilizações Antigas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --gold: #d4af37;
+            --stone: #a8a29e;
+            --marble: #e7e5e4;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--marble);
+            scroll-behavior: smooth;
+        }
+        
+        .title-font {
+            font-family: 'Cinzel', serif;
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .gold-border {
+            border: 1px solid var(--gold);
+        }
+        
+        .gold-text {
+            color: var(--gold);
+        }
+        
+        .stone-text {
+            color: var(--stone);
+        }
+        
+        .marble-bg {
+            background-color: var(--marble);
+        }
+        
+        .gold-bg {
+            background-color: var(--gold);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--gold);
+        }
+        
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .zoom-on-hover {
+            transition: transform 0.3s ease;
+        }
+        
+        .zoom-on-hover:hover {
+            transform: scale(1.03);
+        }
+        
+        .civilization-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+        }
+        
+        .civilization-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .gallery-slide {
+            min-width: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-option:hover {
+            background-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .quiz-option.correct {
+            background-color: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 1);
+        }
+        
+        .quiz-option.incorrect {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header/Navigation -->
+    <header class="fixed w-full z-50 bg-black bg-opacity-90 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-landmark gold-text text-2xl mr-2"></i>
+                <h1 class="title-font text-xl gold-text">Museu Virtual</h1>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#home" class="text-white hover:gold-text transition duration-300">Início</a></li>
+                    <li><a href="#civilizations" class="text-white hover:gold-text transition duration-300">Civilizações</a></li>
+                    <li><a href="#timeline" class="text-white hover:gold-text transition duration-300">Linha do Tempo</a></li>
+                    <li><a href="#blog" class="text-white hover:gold-text transition duration-300">Blog</a></li>
+                    <li><a href="#explorer" class="text-white hover:gold-text transition duration-300">Explorador</a></li>
+                    <li><a href="#quiz" class="text-white hover:gold-text transition duration-300">Quiz</a></li>
+                    <li><a href="#contact" class="text-white hover:gold-text transition duration-300">Contato</a></li>
+                </ul>
+            </nav>
+            <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-black bg-opacity-95 w-full" id="mobile-menu">
+            <ul class="px-4 py-2">
+                <li class="py-2 border-b border-gray-700"><a href="#home" class="block text-white hover:gold-text">Início</a></li>
+                <li class="py-2 border-b border-gray-700"><a href="#civilizations" class="block text-white hover:gold-text">Civilizações</a></li>
+                <li class="py-2 border-b border-gray-700"><a href="#timeline" class="block text-white hover:gold-text">Linha do Tempo</a></li>
+                <li class="py-2 border-b border-gray-700"><a href="#blog" class="block text-white hover:gold-text">Blog</a></li>
+                <li class="py-2 border-b border-gray-700"><a href="#explorer" class="block text-white hover:gold-text">Explorador</a></li>
+                <li class="py-2 border-b border-gray-700"><a href="#quiz" class="block text-white hover:gold-text">Quiz</a></li>
+                <li class="py-2"><a href="#contact" class="block text-white hover:gold-text">Contato</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <!-- Video Background -->
+        <div class="absolute inset-0 z-0">
+            <video autoplay muted loop class="w-full h-full object-cover opacity-40">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-ruins-of-an-ancient-temple-15870-large.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="container mx-auto px-4 z-10 text-center fade-in">
+            <h1 class="title-font text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gold-text">
+                Museu Virtual de <br> Civilizações Antigas
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto stone-text slide-in-left">
+                Reviva o passado em uma jornada digital através das mais fascinantes culturas da humanidade
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 slide-in-right">
+                <a href="#civilizations" class="px-6 py-3 gold-bg text-black font-semibold rounded hover:bg-opacity-90 transition duration-300 transform hover:scale-105">
+                    Explorar Civilizações
+                </a>
+                <a href="#timeline" class="px-6 py-3 gold-border text-white font-semibold rounded hover:bg-opacity-20 transition duration-300 transform hover:scale-105">
+                    Linha do Tempo
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-0 right-0 text-center animate-bounce">
+            <a href="#civilizations" class="text-white text-2xl">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Civilizations Section -->
+    <section id="civilizations" class="py-20 bg-gradient-to-b from-primary-dark to-secondary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Civilizações Antigas</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Explore as grandes civilizações que moldaram o mundo como o conhecemos hoje
+                </p>
+            </div>
+            
+            <!-- Civilization Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Egypt -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1529946179074-87642f6204d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Egito Antigo" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-eye gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">Egito Antigo</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            A terra dos faraós, pirâmides e uma das civilizações mais duradouras da história.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">3100 AEC - 332 AEC</span>
+                            <button onclick="showCivilization('egypt')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Greece -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+                             alt="Grécia Antiga" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-chess-queen gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">Grécia Antiga</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Berço da democracia, filosofia e dos Jogos Olímpicos, com uma rica mitologia.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">800 AEC - 146 AEC</span>
+                            <button onclick="showCivilization('greece')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rome -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Roma Antiga" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-archway gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">Roma Antiga</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            De pequena cidade a império que dominou o Mediterrâneo e influenciou o mundo.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">753 AEC - 476 EC</span>
+                            <button onclick="showCivilization('rome')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Maya -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1548345680-0b3e7b6b8d5a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Civilização Maia" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-sun gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">Civilização Maia</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Notáveis por sua escrita, matemática, astronomia e impressionantes pirâmides.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">2000 AEC - 1697 EC</span>
+                            <button onclick="showCivilization('maya')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- China -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="China Antiga" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-dragon gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">China Antiga</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Uma das civilizações mais antigas, com invenções como papel, pólvora e bússola.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">1600 AEC - 220 EC</span>
+                            <button onclick="showCivilization('china')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Persia -->
+                <div class="civilization-card rounded-lg overflow-hidden shadow-lg gold-border p-0 zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1580077871668-f80cb6f1a3e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Pérsia Antiga" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-crown gold-text mr-2"></i>
+                            <h3 class="title-font text-xl gold-text">Pérsia Antiga</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Um dos maiores impérios da antiguidade, conhecido por sua tolerância e estradas.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">550 AEC - 651 EC</span>
+                            <button onclick="showCivilization('persia')" class="gold-text hover:underline">Explorar →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Civilization Detail Modal -->
+    <div id="civilization-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden overflow-y-auto">
+        <div class="container mx-auto px-4 py-20">
+            <div class="bg-secondary-dark rounded-lg shadow-2xl overflow-hidden">
+                <div class="relative">
+                    <button onclick="hideCivilization()" class="absolute top-4 right-4 bg-black bg-opacity-70 text-white rounded-full p-2 z-10 hover:gold-bg hover:text-black transition">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <!-- Header with civilization image -->
+                    <div id="modal-header" class="h-64 md:h-96 w-full bg-cover bg-center relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h2 id="modal-title" class="title-font text-3xl md:text-5xl gold-text mb-2"></h2>
+                            <div id="modal-dates" class="text-gray-300"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content tabs -->
+                    <div class="border-b border-gray-700">
+                        <div class="flex overflow-x-auto">
+                            <button class="tab-button px-6 py-4 font-medium text-white border-b-2 border-transparent hover:gold-text active-tab" data-tab="overview">
+                                <i class="fas fa-info-circle mr-2"></i> Visão Geral
+                            </button>
+                            <button class="tab-button px-6 py-4 font-medium text-white border-b-2 border-transparent hover:gold-text" data-tab="timeline">
+                                <i class="fas fa-hourglass-half mr-2"></i> Linha do Tempo
+                            </button>
+                            <button class="tab-button px-6 py-4 font-medium text-white border-b-2 border-transparent hover:gold-text" data-tab="gallery">
+                                <i class="fas fa-images mr-2"></i> Galeria
+                            </button>
+                            <button class="tab-button px-6 py-4 font-medium text-white border-b-2 border-transparent hover:gold-text" data-tab="figures">
+                                <i class="fas fa-users mr-2"></i> Figuras Históricas
+                            </button>
+                            <button class="tab-button px-6 py-4 font-medium text-white border-b-2 border-transparent hover:gold-text" data-tab="map">
+                                <i class="fas fa-map-marked-alt mr-2"></i> Mapa
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab content -->
+                    <div class="p-6">
+                        <!-- Overview Tab -->
+                        <div id="overview-tab" class="tab-content active">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div class="lg:col-span-2">
+                                    <h3 class="title-font text-2xl gold-text mb-4">Introdução Histórica</h3>
+                                    <div id="modal-intro" class="text-gray-300 mb-6"></div>
+                                    
+                                    <h3 class="title-font text-2xl gold-text mb-4">Contribuições</h3>
+                                    <div id="modal-contributions" class="text-gray-300"></div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="title-font text-2xl gold-text mb-4">Curiosidades</h3>
+                                    <div id="modal-facts" class="space-y-4"></div>
+                                    
+                                    <div class="mt-8 p-4 gold-border rounded-lg">
+                                        <h4 class="title-font text-xl gold-text mb-3">Documentários</h4>
+                                        <div id="modal-documentaries" class="space-y-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline Tab -->
+                        <div id="timeline-tab" class="tab-content hidden">
+                            <div class="relative">
+                                <!-- Timeline will be inserted here by JavaScript -->
+                                <div id="modal-timeline" class="space-y-8"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Tab -->
+                        <div id="gallery-tab" class="tab-content hidden">
+                            <div class="relative overflow-hidden">
+                                <div id="gallery-slides" class="flex transition-transform duration-300"></div>
+                                <button id="gallery-prev" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-4 hover:gold-bg hover:text-black transition">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button id="gallery-next" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-4 hover:gold-bg hover:text-black transition">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div id="gallery-caption" class="text-center mt-4 text-gray-300"></div>
+                        </div>
+                        
+                        <!-- Historical Figures Tab -->
+                        <div id="figures-tab" class="tab-content hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="modal-figures"></div>
+                        </div>
+                        
+                        <!-- Map Tab -->
+                        <div id="map-tab" class="tab-content hidden">
+                            <div class="aspect-w-16 aspect-h-9 bg-gray-800 rounded-lg overflow-hidden">
+                                <img id="modal-map" src="" alt="Map" class="w-full h-full object-contain">
+                            </div>
+                            <div id="map-description" class="mt-4 text-gray-300"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Timeline Section -->
+    <section id="timeline" class="py-20 bg-secondary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Linha do Tempo Global</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Compare os principais eventos das civilizações antigas em uma linha do tempo interativa
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline axis -->
+                <div class="h-1 bg-gray-600 mb-12 relative">
+                    <div class="absolute left-0 -top-3 w-2 h-7 gold-bg"></div>
+                    <div class="absolute left-1/4 -top-3 w-2 h-7 gold-bg"></div>
+                    <div class="absolute left-1/2 -top-3 w-2 h-7 gold-bg"></div>
+                    <div class="absolute left-3/4 -top-3 w-2 h-7 gold-bg"></div>
+                    <div class="absolute right-0 -top-3 w-2 h-7 gold-bg"></div>
+                    
+                    <div class="absolute left-0 -top-10 text-xs">3500 AEC</div>
+                    <div class="absolute left-1/4 -top-10 text-xs">2500 AEC</div>
+                    <div class="absolute left-1/2 -top-10 text-xs">1500 AEC</div>
+                    <div class="absolute left-3/4 -top-10 text-xs">500 AEC</div>
+                    <div class="absolute right-0 -top-10 text-xs">500 EC</div>
+                </div>
+                
+                <!-- Timeline events -->
+                <div class="space-y-16">
+                    <!-- Event 1 -->
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-8 mb-4 md:mb-0">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full gold-bg mr-2"></div>
+                                    <span class="text-sm gold-text">Egito Antigo</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Construção das Grandes Pirâmides</h3>
+                                <p class="text-gray-300">Por volta de 2580–2560 AEC, as pirâmides de Gizé são construídas como tumbas para os faraós.</p>
+                                <div class="mt-3 text-sm stone-text">~2600 AEC</div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-blue-400 mr-2"></div>
+                                    <span class="text-sm text-blue-400">Mesopotâmia</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Invenção da Escrita Cuneiforme</h3>
+                                <p class="text-gray-300">Os sumérios desenvolvem um dos primeiros sistemas de escrita por volta de 3200 AEC.</p>
+                                <div class="mt-3 text-sm stone-text">~3200 AEC</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Event 2 -->
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-8 mb-4 md:mb-0">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-green-400 mr-2"></div>
+                                    <span class="text-sm text-green-400">Grécia Antiga</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Primeiros Jogos Olímpicos</h3>
+                                <p class="text-gray-300">Os primeiros Jogos Olímpicos registrados ocorrem em Olímpia em 776 AEC.</p>
+                                <div class="mt-3 text-sm stone-text">776 AEC</div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-purple-400 mr-2"></div>
+                                    <span class="text-sm text-purple-400">China Antiga</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Dinastia Shang</h3>
+                                <p class="text-gray-300">A primeira dinastia chinesa comprovada arqueologicamente (1600–1046 AEC) desenvolve a escrita chinesa.</p>
+                                <div class="mt-3 text-sm stone-text">1600 AEC</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Event 3 -->
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-8 mb-4 md:mb-0">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-red-400 mr-2"></div>
+                                    <span class="text-sm text-red-400">Roma Antiga</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Fundação de Roma</h3>
+                                <p class="text-gray-300">Segundo a lenda, Roma é fundada por Rômulo em 753 AEC, marcando o início da civilização romana.</p>
+                                <div class="mt-3 text-sm stone-text">753 AEC</div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-yellow-400 mr-2"></div>
+                                    <span class="text-sm text-yellow-400">Civilização Maia</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Período Clássico Maia</h3>
+                                <p class="text-gray-300">Florescimento da civilização maia com grandes cidades como Tikal e Calakmul (250–900 EC).</p>
+                                <div class="mt-3 text-sm stone-text">250 EC</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Event 4 -->
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-8 mb-4 md:mb-0">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full bg-pink-400 mr-2"></div>
+                                    <span class="text-sm text-pink-400">Pérsia Antiga</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Império Aquemênida</h3>
+                                <p class="text-gray-300">Ciro, o Grande, funda o Império Persa em 550 AEC, criando um dos maiores impérios da antiguidade.</p>
+                                <div class="mt-3 text-sm stone-text">550 AEC</div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg gold-border">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 rounded-full gold-bg mr-2"></div>
+                                    <span class="text-sm gold-text">Egito Antigo</span>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2">Reinado de Cleópatra</h3>
+                                <p class="text-gray-300">Cleópatra VII, a última governante ativa do Egito ptolomaico (51–30 AEC), conhecida por suas alianças com Roma.</p>
+                                <div class="mt-3 text-sm stone-text">51 AEC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <button class="px-6 py-3 gold-border text-white font-semibold rounded hover:bg-opacity-20 transition duration-300">
+                    Ver Linha do Tempo Completa
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-primary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Artigos e Notícias</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Descubra as últimas pesquisas e descobertas sobre civilizações antigas
+                </p>
+            </div>
+            
+            <!-- Blog Filters -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition active-filter">
+                    Todos
+                </button>
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition">
+                    Egito
+                </button>
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition">
+                    Grécia
+                </button>
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition">
+                    Roma
+                </button>
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition">
+                    Maias
+                </button>
+                <button class="px-4 py-2 gold-border text-white rounded-full hover:bg-opacity-20 transition">
+                    Outros
+                </button>
+            </div>
+            
+            <!-- Blog Posts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Post 1 -->
+                <article class="bg-secondary-dark rounded-lg overflow-hidden shadow-lg gold-border zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1623067468537-2c843d5f88bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Nova descoberta no Egito" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="text-sm gold-text">Egito Antigo</span>
+                            <span class="mx-2 stone-text">•</span>
+                            <span class="text-sm stone-text">15 Jun 2023</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Tumba Intacta Descoberta no Vale dos Reis</h3>
+                        <p class="text-gray-300 mb-4">
+                            Arqueólogos anunciaram a descoberta de uma tumba faraônica intacta contendo artefatos raros e múmias...
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">8 min de leitura</span>
+                            <button class="gold-text hover:underline">Ler mais →</button>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Post 2 -->
+                <article class="bg-secondary-dark rounded-lg overflow-hidden shadow-lg gold-border zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600587435949-5a9a7e5f01a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Tecnologia romana" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="text-sm gold-text">Roma Antiga</span>
+                            <span class="mx-2 stone-text">•</span>
+                            <span class="text-sm stone-text">2 Jun 2023</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Engenharia Romana: Os Segredos do Concreto que Dura Séculos</h3>
+                        <p class="text-gray-300 mb-4">
+                            Pesquisadores descobrem a composição química única que torna o concreto romano mais durável que o moderno...
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">10 min de leitura</span>
+                            <button class="gold-text hover:underline">Ler mais →</button>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Post 3 -->
+                <article class="bg-secondary-dark rounded-lg overflow-hidden shadow-lg gold-border zoom-on-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1579403124614-197f69d8187b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1364&q=80" 
+                             alt="Decifrando hieróglifos" class="w-full h-full object-cover transition duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="text-sm gold-text">Grécia Antiga</span>
+                            <span class="mx-2 stone-text">•</span>
+                            <span class="text-sm stone-text">20 Mai 2023</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Novas Interpretações dos Textos de Platão Revelam Filosofia Esquecida</h3>
+                        <p class="text-gray-300 mb-4">
+                            Técnicas modernas de análise textual estão revelando camadas de significado anteriormente desconhecidas nos diálogos...
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm stone-text">12 min de leitura</span>
+                            <button class="gold-text hover:underline">Ler mais →</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="px-6 py-3 gold-bg text-black font-semibold rounded hover:bg-opacity-90 transition duration-300">
+                    Ver Todos os Artigos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explorer Mode Section -->
+    <section id="explorer" class="py-20 bg-gradient-to-b from-secondary-dark to-primary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Modo Explorador</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Navegue pelas civilizações como um verdadeiro arqueólogo digital
+                </p>
+            </div>
+            
+            <div class="bg-black bg-opacity-50 rounded-xl overflow-hidden gold-border">
+                <div class="grid grid-cols-1 lg:grid-cols-3">
+                    <!-- Map -->
+                    <div class="lg:col-span-2 p-4 md:p-8">
+                        <div class="relative bg-gray-900 rounded-lg overflow-hidden" style="padding-top: 56.25%;">
+                            <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1476&q=80" 
+                                 alt="Mapa do mundo antigo" class="absolute inset-0 w-full h-full object-cover opacity-70">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center p-6 bg-black bg-opacity-70 rounded-lg max-w-md">
+                                    <h3 class="title-font text-2xl gold-text mb-3">Mapa das Civilizações Antigas</h3>
+                                    <p class="text-gray-300 mb-4">Clique em uma região para explorar seus tesouros arqueológicos</p>
+                                    <button class="px-4 py-2 gold-bg text-black rounded hover:bg-opacity-90 transition">
+                                        Iniciar Exploração
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Map markers -->
+                            <div class="absolute top-1/4 left-1/4">
+                                <button class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-125 transition" 
+                                        onclick="showDiscovery('egypt')">
+                                    <i class="fas fa-landmark"></i>
+                                </button>
+                            </div>
+                            <div class="absolute top-1/3 right-1/4">
+                                <button class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-125 transition" 
+                                        onclick="showDiscovery('greece')">
+                                    <i class="fas fa-chess-queen"></i>
+                                </button>
+                            </div>
+                            <div class="absolute top-1/2 left-1/2">
+                                <button class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-125 transition" 
+                                        onclick="showDiscovery('rome')">
+                                    <i class="fas fa-archway"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-1/4 left-1/3">
+                                <button class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-125 transition" 
+                                        onclick="showDiscovery('maya')">
+                                    <i class="fas fa-sun"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Discoveries log -->
+                    <div class="p-4 md:p-8 bg-gray-900 bg-opacity-70">
+                        <h3 class="title-font text-xl gold-text mb-4">Registro de Descobertas</h3>
+                        <div class="space-y-4 h-96 overflow-y-auto pr-2">
+                            <!-- Discovery items will be added here by JavaScript -->
+                            <div id="discoveries-log" class="space-y-4">
+                                <div class="bg-gray-800 p-4 rounded-lg gold-border">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas fa-info-circle gold-text mr-2"></i>
+                                        <span class="text-sm gold-text">Bem-vindo ao Modo Explorador</span>
+                                    </div>
+                                    <p class="text-gray-300 text-sm">
+                                        Clique nos marcadores do mapa para descobrir artefatos, templos e figuras históricas.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discovery Modal -->
+    <div id="discovery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-secondary-dark rounded-lg shadow-2xl overflow-hidden max-w-4xl w-full gold-border">
+            <div class="relative">
+                <button onclick="hideDiscovery()" class="absolute top-4 right-4 bg-black bg-opacity-70 text-white rounded-full p-2 z-10 hover:gold-bg hover:text-black transition">
+                    <i class="fas fa-times"></i>
+                </button>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="h-64 md:h-full">
+                        <img id="discovery-image" src="" alt="Discovery" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span id="discovery-civilization" class="px-3 py-1 bg-gray-800 rounded-full text-sm gold-text"></span>
+                        </div>
+                        <h2 id="discovery-title" class="title-font text-2xl gold-text mb-3"></h2>
+                        <div id="discovery-content" class="text-gray-300 mb-4"></div>
+                        <div class="flex items-center text-sm stone-text">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span id="discovery-period"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="py-20 bg-primary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Quiz Interativo</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Teste seu conhecimento sobre as civilizações antigas
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto bg-secondary-dark rounded-xl shadow-lg overflow-hidden gold-border">
+                <!-- Quiz progress -->
+                <div class="bg-gray-900 px-6 py-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm stone-text">Pergunta <span id="current-question">1</span> de 5</span>
+                        <div class="w-1/2 bg-gray-700 rounded-full h-2">
+                            <div id="quiz-progress" class="gold-bg h-2 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quiz content -->
+                <div class="p-6 md:p-8">
+                    <div id="quiz-start" class="text-center">
+                        <h3 class="title-font text-2xl gold-text mb-4">Quiz das Civilizações Antigas</h3>
+                        <p class="text-gray-300 mb-6">
+                            Responda 5 perguntas sobre diferentes civilizações antigas e descubra o quanto você sabe sobre a história da humanidade.
+                        </p>
+                        <button onclick="startQuiz()" class="px-6 py-3 gold-bg text-black font-semibold rounded hover:bg-opacity-90 transition duration-300">
+                            Começar Quiz
+                        </button>
+                    </div>
+                    
+                    <div id="quiz-questions" class="hidden">
+                        <h3 id="quiz-question" class="text-xl font-semibold mb-6"></h3>
+                        <div id="quiz-options" class="space-y-3"></div>
+                    </div>
+                    
+                    <div id="quiz-result" class="hidden text-center">
+                        <h3 class="title-font text-2xl gold-text mb-4">Seu Resultado</h3>
+                        <div class="text-5xl font-bold gold-text mb-6">
+                            <span id="quiz-score">0</span>/5
+                        </div>
+                        <p id="quiz-feedback" class="text-gray-300 mb-6 max-w-md mx-auto"></p>
+                        <button onclick="resetQuiz()" class="px-6 py-3 gold-bg text-black font-semibold rounded hover:bg-opacity-90 transition duration-300">
+                            Jogar Novamente
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gradient-to-b from-primary-dark to-secondary-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="title-font text-3xl md:text-4xl gold-text mb-4">Contato</h2>
+                <div class="w-24 h-1 gold-bg mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg stone-text">
+                    Entre em contato conosco para dúvidas, sugestões ou parcerias
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact form -->
+                <div class="bg-secondary-dark rounded-xl shadow-lg overflow-hidden gold-border p-6">
+                    <h3 class="title-font text-xl gold-text mb-6">Envie-nos uma Mensagem</h3>
+                    <form id="contact-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-300 mb-2">Nome</label>
+                            <input type="text" id="name" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:gold-border focus:outline-none">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">E-mail</label>
+                            <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:gold-border focus:outline-none">
+                        </div>
+                        <div>
+                            <label for="civilization" class="block text-gray-300 mb-2">Qual civilização você mais gostou?</label>
+                            <select id="civilization" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:gold-border focus:outline-none">
+                                <option value="">Selecione uma opção</option>
+                                <option value="egypt">Egito Antigo</option>
+                                <option value="greece">Grécia Antiga</option>
+                                <option value="rome">Roma Antiga</option>
+                                <option value="maya">Civilização Maia</option>
+                                <option value="china">China Antiga</option>
+                                <option value="persia">Pérsia Antiga</option>
+                                <option value="other">Outra</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-300 mb-2">Mensagem</label>
+                            <textarea id="message" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:gold-border focus:outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="px-6 py-3 gold-bg text-black font-semibold rounded hover:bg-opacity-90 transition duration-300">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact info and map -->
+                <div class="space-y-8">
+                    <div class="bg-secondary-dark rounded-xl shadow-lg overflow-hidden gold-border p-6">
+                        <h3 class="title-font text-xl gold-text mb-4">Informações de Contato</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt gold-text mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-semibold">Endereço</h4>
+                                    <p class="text-gray-300">Avenida da História, 123<br>Centro Histórico<br>Rio de Janeiro, RJ</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope gold-text mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-semibold">E-mail</h4>
+                                    <p class="text-gray-300">contato@museuvirtual.com.br</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone gold-text mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-semibold">Telefone</h4>
+                                    <p class="text-gray-300">(21) 98765-4321</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-secondary-dark rounded-xl shadow-lg overflow-hidden gold-border">
+                        <div class="h-64 w-full">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.301603700593!2d-43.17709762369112!3d-22.902243137717122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x997f58a6a00a9d%3A0x3f251d85272f76f7!2sBiblioteca%20Nacional!5e0!3m2!1sen!2sbr!4v1686785635910!5m2!1sen!2sbr" 
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-landmark gold-text text-2xl mr-2"></i>
+                        <h3 class="title-font text-xl gold-text">Museu Virtual</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Explore as maravilhas das civilizações antigas em nosso museu digital.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:gold-text transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:gold-text transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:gold-text transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:gold-text transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="title-font text-lg gold-text mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:gold-text transition">Início</a></li>
+                        <li><a href="#civilizations" class="text-gray-400 hover:gold-text transition">Civilizações</a></li>
+                        <li><a href="#timeline" class="text-gray-400 hover:gold-text transition">Linha do Tempo</a></li>
+                        <li><a href="#blog" class="text-gray-400 hover:gold-text transition">Blog</a></li>
+                        <li><a href="#quiz" class="text-gray-400 hover:gold-text transition">Quiz</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:gold-text transition">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="title-font text-lg gold-text mb-4">Civilizações</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">Egito Antigo</a></li>
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">Grécia Antiga</a></li>
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">Roma Antiga</a></li>
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">Civilização Maia</a></li>
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">China Antiga</a></li>
+                        <li><a href="#" class="text-gray-400 hover:gold-text transition">Pérsia Antiga</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="title-font text-lg gold-text mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">
+                        Inscreva-se para receber atualizações sobre novas exposições e artigos.
+                    </p>
+                    <form class="flex">
+                        <input type="email" placeholder="Seu e-mail" class="bg-gray-800 text-white px-4 py-2 rounded-l-lg focus:outline-none w-full">
+                        <button type="submit" class="gold-bg text-black px-4 py-2 rounded-r-lg hover:bg-opacity-90 transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2023 Museu Virtual de Civilizações Antigas. Todos os direitos reservados.
+                    </p>
+                    <p class="text-gray-400 text-sm">
+                        Projeto educacional desenvolvido por <span class="gold-text">Equipe ArqueoDigital</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Tab functionality for civilization modal
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and tabs
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active-tab'));
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                
+                // Add active class to clicked button
+                this.classList.add('active-tab');
+                
+                // Show corresponding tab
+                const tabId = this.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+
+        // Civilization data
+        const civilizations = {
+            egypt: {
+                title: "Egito Antigo",
+                image: "https://images.unsplash.com/photo-1529946179074-87642f6204d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                dates: "3100 AEC - 332 AEC",
+                intro: `<p>O Egito Antigo foi uma das civilizações mais duradouras e influentes da história, florescendo ao longo do rio Nilo por mais de três milênios. Conhecido por suas impressionantes pirâmides, faraós divinos e avançados conhecimentos em medicina e astronomia, o Egito deixou um legado que ainda fascina o mundo moderno.</p>
+                        <p class="mt-4">A civilização egípcia foi unificada por volta de 3100 AEC sob o faraó Menés e passou por períodos de grande poder (como o Antigo, Médio e Novo Império) e períodos intermediários de relativa instabilidade.</p>`,
+                contributions: `<ul class="list-disc pl-5 space-y-2">
+                                <li>Desenvolvimento de um sistema de escrita hieroglífico complexo</li>
+                                <li>Construção de monumentais estruturas como as pirâmides de Gizé</li>
+                                <li>Avancos em medicina, incluindo procedimentos cirúrgicos</li>
+                                <li>Desenvolvimento de um calendário solar preciso</li>
+                                <li>Técnicas avançadas de mumificação e crenças sobre a vida após a morte</li>
+                            </ul>`,
+                facts: [
+                    {
+                        icon: "fas fa-question",
+                        text: "As pirâmides foram originalmente revestidas com pedra calcária polida, fazendo-as brilhar ao sol."
+                    },
+                    {
+                        icon: "fas fa-question",
+                        text: "Cleópatra viveu mais perto no tempo da chegada do homem à Lua do que da construção das Grandes Pirâmides."
+                    },
+                    {
+                        icon: "fas fa-question",
+                        text: "Os egípcios antigos criaram o primeiro sistema de paz registrado, com o Tratado de Kadesh em 1259 AEC."
+                    }
+                ],
+                documentaries: [
+                    {
+                        title: "Egito: O Império Dourado",
+                        link: "#"
+                    },
+                    {
+                        title: "Os Segredos das Pirâmides",
+                        link: "#"
+                    },
+                    {
+                        title: "Tutancâmon: O Faraó Menino",
+                        link: "#"
+                    }
+                ],
+                timeline: [
+                    {
+                        year: "3100 AEC",
+                        event: "Unificação do Alto e Baixo Egito sob o faraó Menés",
+                        description: "Estabelecimento da primeira dinastia e início do período dinástico"
+                    },
+                    {
+                        year: "2580-2560 AEC",
+                        event: "Construção da Grande Pirâmide de Gizé",
+                        description: "Construída para o faraó Khufu, é a única das Sete Maravilhas do Mundo Antigo ainda existente"
+                    },
+                    {
+                        year: "1479-1458 AEC",
+                        event: "Reinado de Hatshepsut",
+                        description: "Uma das poucas mulheres faraós, conhecida por suas expedições comerciais e projetos de construção"
+                    },
+                    {
+                        year: "1353-1336 AEC",
+                        event: "Reinado de Akhenaton",
+                        description: "Introdução do monoteísmo (culto a Aton) e mudança da capital para Amarna"
+                    },
+                    {
+                        year: "1279-1213 AEC",
+                        event: "Reinado de Ramsés II",
+                        description: "Um dos faraós mais poderosos, conhecido por suas campanhas militares e projetos arquitetônicos"
+                    },
+                    {
+                        year: "332 AEC",
+                        event: "Conquista por Alexandre, o Grande",
+                        description: "Fim do período faraônico independente e início do período helenístico"
+                    }
+                ],
+                gallery: [
+                    {
+                        image: "https://images.unsplash.com/photo-1529946179074-87642f6204d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        caption: "As Grandes Pirâmides de Gizé, construídas como tumbas para os faraós"
+                    },
+                    {
+                        image: "https://images.unsplash.com/photo-1623067468537-2c843d5f88bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        caption: "Máscara mortuária de Tutancâmon, um dos artefatos mais famosos do Egito"
+                    },
+                    {
+                        image: "https://images.unsplash.com/photo-1575408264798-b50b252663e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1353&q=80",
+                        caption: "Templo de Karnak, o maior complexo religioso do mundo antigo"
+                    },
+                    {
+                        image: "https://images.unsplash.com/photo-1580077871668-f80cb6f1a3e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        caption: "Hieróglifos egípcios, um dos sistemas de escrita mais antigos"
+                    }
+                ],
+                figures: [
+                    {
+                        name: "Ramsés II",
+                        role: "Faraó",
+                        period: "1279-1213 AEC",
+                        description: "Um dos faraós mais poderosos e celebrados, conhecido como Ramsés, o Grande. Governou por 66 anos e expandiu o império egípcio.",
+                        image: "https://images.unsplash.com/photo-1543716091-a840c05249ec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=
+</html>
